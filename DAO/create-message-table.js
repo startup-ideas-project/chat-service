@@ -5,11 +5,11 @@ const MessageTableParams = {
     TableName : "Chat_Message",
     KeySchema: [       
         { AttributeName: "messageID", KeyType: "HASH"},  //Partition key
-        { AttributeName: "created", KeyType: "RANGE" }, //Sort key
+        { AttributeName: "commentID", KeyType: "RANGE" }, //Sort key
     ],
     AttributeDefinitions: [       
         { AttributeName: "messageID", AttributeType: "S" },
-        { AttributeName: "created", AttributeType: "S" }
+        { AttributeName: "commentID", AttributeType: "S" }
     ],
     ProvisionedThroughput: {       
         ReadCapacityUnits: 10, 
