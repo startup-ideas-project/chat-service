@@ -10,7 +10,7 @@ const io = require("socket.io")(server, {
 const cors = require('cors')
 const { createMessageTable } = require('./DAO/create-message-table')
 // APIs import
-const {getAllFiles} = require('./get-files/get-documents')
+const {getComments} = require('./get-comments/get-comment')
 const corsOptions = {
     origin: '*'
 }
@@ -23,29 +23,25 @@ createMessageTable()
 // app configs
 app.use(cors(corsOptions))
 
-// file service APIs
-const files = getAllFiles()
-
 const port = process.env.PORT || 4080
 app.get(`/health`, (req, res) => {
     res.send(200)
 })
 
-// conversationID is the id of the document
-app.get(`/chat/:conversationID`, getMessage)
-
+// commentID is the id of the document
+app.get(`/chat/:commentID`, getMessage)
 
 io.on('connection', (socket) => {
     console.log('a user connected');
-    files.then(data => {
-        const items = data.data.Items
+    getComments().then(data => {
         // generate socketIO
-        items.map( item => {
-            socket.on(item.key, (message) => {
-                console.log(`on this ${item.key}, receive message ${message}`)
-                createRecord('authenticatedUser1', message)
+        data.data.map( commentid => {
+            console.log(`A User is connected to ${commentid.commentid}`)
+            socket.on(commentid.commentid, (message) => {
+                console.log(`on this ${commentid.commentid}, receive message ${message}`)
+                createRecord('authenticatedUser1', message, commentid.commentid)
                 // emits message to ALL connected user
-                io.emit(item.key, message)
+                io.emit(commentid.commentid, message)
             })
         })
     })

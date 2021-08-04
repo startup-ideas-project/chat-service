@@ -1,18 +1,18 @@
 const {dynamoDBClient} = require('./dynamoDB/dynamodb')
 const {MessageTableParams} = require('./create-message-table')
 
-const generateScanParams = (creator) => {
+const generateScanParams = (commentID) => {
     const params =  {
         TableName: MessageTableParams.TableName,
-        FilterExpression: `creator = :creator`,
+        FilterExpression: `commentID = :commentID`,
         ExpressionAttributeValues:{
-            ":creator": creator
+            ":commentID": commentID
         }
     }
     return params;
 }
-const getMessageDAO = ({creator}) => {
-    const params = generateScanParams(creator)
+const getMessageDAO = ({commentID}) => {
+    const params = generateScanParams(commentID)
     return dynamoDBClient.scan(params).promise()
 }
 
