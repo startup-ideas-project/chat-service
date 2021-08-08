@@ -19,7 +19,7 @@ const generateMessageRecord = ({creator,message, commentID}) => {
     return data;
 }
 
-const createRecord = (creator, message, commentID = uuidv4()) => {
+const createRecord = (creator, message, commentID) => {
     const params = generateMessageRecord({
         creator,
         message,
