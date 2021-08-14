@@ -5,26 +5,26 @@ const moment = require('moment')
 
 
 // using this method to minimize ability to wildly created whatever field wanted
-const generateMessageRecord = ({creator,message, commentID}) => {
+const generateMessageRecord = ({message, commentID}) => {
     const data =  {
         TableName: MessageTableParams.TableName,
         Item: {
             messageID: uuidv4(),
-            created: moment().format(),
-            creator,
-            message,
+            created: Date.now(), //convert into miliseconds
+            creator: message.sender,
+            message: message.message,
             commentID
         }
     }
     return data;
 }
 
-const createRecord = (creator, message, commentID) => {
+const createRecord = (message, commentID) => {
     const params = generateMessageRecord({
-        creator,
         message,
         commentID
     })
+    console.log(params)
     dynamoDBClient.put(params, function(err, data) {
         if (err) {
             console.error("Unable to add item. Error JSON:", JSON.stringify(err, null, 2));

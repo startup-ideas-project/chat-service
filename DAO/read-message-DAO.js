@@ -4,16 +4,17 @@ const {MessageTableParams} = require('./create-message-table')
 const generateScanParams = (commentID) => {
     const params =  {
         TableName: MessageTableParams.TableName,
-        FilterExpression: `commentID = :commentID`,
+        KeyConditionExpression: `commentID = :commentID and created < :now`,
         ExpressionAttributeValues:{
-            ":commentID": commentID
+            ":commentID": commentID,
+            ":now": Date.now()
         }
     }
     return params;
 }
 const getMessageDAO = ({commentID}) => {
     const params = generateScanParams(commentID)
-    return dynamoDBClient.scan(params).promise()
+    return dynamoDBClient.query(params).promise()
 }
 
 module.exports = {

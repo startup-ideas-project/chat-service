@@ -4,12 +4,12 @@ const {dynamodb} = require('./dynamoDB/dynamodb');
 const MessageTableParams = {
     TableName : "Chat_Message",
     KeySchema: [       
-        { AttributeName: "messageID", KeyType: "HASH"},  //Partition key
-        { AttributeName: "commentID", KeyType: "RANGE" }, //Sort key
+        { AttributeName: "commentID", KeyType: "HASH"},  //Partition key
+        { AttributeName: "created", KeyType: "RANGE" }, //Sort key
     ],
     AttributeDefinitions: [       
-        { AttributeName: "messageID", AttributeType: "S" },
-        { AttributeName: "commentID", AttributeType: "S" }
+        { AttributeName: "commentID", AttributeType: "S" },
+        { AttributeName: "created", AttributeType: "N" }
     ],
     ProvisionedThroughput: {       
         ReadCapacityUnits: 10, 
@@ -27,7 +27,18 @@ const createTable = (db, params) =>{
     });
 }
 
-const createMessageTable = () => {
+const deleteTable = async  (db, params) => {
+    await db.deleteTable(params, (err, data) => {
+        if (err){
+            console.error("Unable to delete the chat table")
+        } else {
+            console.log("Successfully delete chat table")
+        }
+    })
+}
+
+const createMessageTable = async () => {
+    // await deleteTable(dynamodb, {TableName: MessageTableParams.TableName})
     createTable(dynamodb,MessageTableParams)
 }
 

@@ -39,7 +39,7 @@ io.on('connection', (socket) => {
             console.log(`A User is connected to ${commentid.commentid}`)
             socket.on(commentid.commentid, (message) => {
                 console.log(`on this ${commentid.commentid}, receive message ${message}`)
-                createRecord('authenticatedUser1', message, commentid.commentid)
+                createRecord(message, commentid.commentid)
                 // emits message to ALL connected user
                 io.emit(commentid.commentid, message)
             })
